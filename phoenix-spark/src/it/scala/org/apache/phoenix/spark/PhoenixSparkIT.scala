@@ -633,4 +633,13 @@ class PhoenixSparkIT extends FunSuite with Matchers with BeforeAndAfterAll {
 
     assert(Math.abs(epoch - ts) < 300000)
   }
+  
+  test("Filter operation doesn't work for column names containing a white space (PHOENIX-2547)") {
+    val sqlContext = new SQLContext(sc)
+    val df = sqlContext.load("org.apache.phoenix.spark", Map("table" -> SchemaUtil.getEscapedArgument("space"),
+      "zkUrl" -> quorumAddress))
+    val res = df.filter(df.col("first name").equalTo("xyz"))
+    // Make sure we got the right value back
+    assert(res.collectAsList().size() == 1L)
+  }
 }
