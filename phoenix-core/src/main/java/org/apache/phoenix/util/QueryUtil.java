@@ -160,7 +160,7 @@ public final class QueryUtil {
         return String.format(
                 "UPSERT %s INTO %s (%s) VALUES (%s)",
                 hintStr,
-                tableName,
+                SchemaUtil.getEscapedTableName(tableName),
                 Joiner.on(", ").join(
                         Iterables.transform(
                                columns,
@@ -195,7 +195,7 @@ public final class QueryUtil {
         for (int i = 0; i < numColumns; i++) {
             parameterList.add("?");
         }
-        return String.format("UPSERT INTO %s VALUES (%s)", tableName, Joiner.on(", ").join(parameterList));
+        return String.format("UPSERT INTO %s VALUES (%s)", SchemaUtil.getEscapedTableName(tableName), Joiner.on(", ").join(parameterList));
     }
     
     /**

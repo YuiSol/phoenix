@@ -379,4 +379,39 @@ public class CsvBulkLoadToolIT extends BaseOwnClusterHBaseManagedTimeIT {
             assertTrue(ex instanceof FileAlreadyExistsException); 
         }
     }
+
+    @Test
+    public void testBasicImportWithHyphen() throws Exception {
+        Statement stmt = conn.createStatement();
+        stmt.execute("DROP TABLE IF EXISTS \"PHOENIX-TEST\"");
+        stmt.execute("CREATE TABLE \"PHOENIX-TEST\" (ID INTEGER PRIMARY KEY, NAME VARCHAR)");
+
+        FileSystem fs = FileSystem.get(getUtility().getConfiguration());
+        FSDataOutputStream outputStream = fs.create(new Path("/tmp/input10.csv"));
+        PrintWriter printWriter = new PrintWriter(outputStream);
+        printWriter.println("1,Name 1");
+        printWriter.println("2,Name 2");
+        printWriter.close();
+
+        CsvBulkLoadTool csvBulkLoadTool = new CsvBulkLoadTool();
+        csvBulkLoadTool.setConf(new Configuration(getUtility().getConfiguration()));
+        csvBulkLoadTool.getConf().set(DATE_FORMAT_ATTRIB,"yyyy/MM/dd");
+        int exitCode = csvBulkLoadTool.run(new String[] {
+                "--input", "/tmp/input10.csv",
+                "--table", "PHOENIX-TEST",
+                "--zookeeper", zkQuorum});
+        assertEquals(0, exitCode);
+
+        ResultSet rs = stmt.executeQuery("SELECT id, name FROM \"PHOENIX-TEST\" ORDER BY id");
+        assertTrue(rs.next());
+        assertEquals(1, rs.getInt(1));
+        assertEquals("Name 1", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(2, rs.getInt(1));
+        assertEquals("Name 2", rs.getString(2));
+        assertFalse(rs.next());
+
+        rs.close();
+        stmt.close();
+    }
 }

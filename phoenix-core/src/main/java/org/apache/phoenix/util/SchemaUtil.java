@@ -745,6 +745,19 @@ public class SchemaUtil {
         final String tableName = getTableNameFromFullName(fullTableName);
         return getEscapedTableName(schemaName, tableName);
     }
+
+    /**
+     * Escapes the given tableName with {@value #ESCAPE_CHARACTER}
+     * @param tableName any non null value.
+     * @return 
+     */
+    public static String getEscapedTableName(String tableName) {
+        Preconditions.checkNotNull(tableName,"TableName passed cannot be null");
+        if(tableName.startsWith(ESCAPE_CHARACTER)) {
+            return tableName;
+        }
+        return getEscapedArgument(tableName);
+    }
     
     /**
      * Escapes the given argument with {@value #ESCAPE_CHARACTER}
