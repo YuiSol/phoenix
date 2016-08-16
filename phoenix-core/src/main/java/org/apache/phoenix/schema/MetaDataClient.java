@@ -2023,7 +2023,7 @@ public class MetaDataClient {
                         throw new ColumnAlreadyExistsException(schemaName, tableName, column.getName().getString());
                     }
                 }
-                if (tableType == PTableType.VIEW && hasColumnWithSameNameAndFamily(columns, column)) {
+                if ((tableType == PTableType.VIEW || tableType == PTableType.TABLE) && hasColumnWithSameNameAndFamily(columns, column)) {
                     // we only need to check for dup columns for views because they inherit columns from parent
                     throw new ColumnAlreadyExistsException(schemaName, tableName, column.getName().getString());
                 }
