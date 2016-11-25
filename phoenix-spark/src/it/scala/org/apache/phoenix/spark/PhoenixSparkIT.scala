@@ -367,7 +367,11 @@ class PhoenixSparkIT extends FunSuite with Matchers with BeforeAndAfterAll {
       "zkUrl" -> quorumAddress))
 
     // Save to TABLE21_COPY
-    df.save("org.apache.phoenix.spark", SaveMode.Overwrite, Map("table" -> "TABLE1_COPY", "zkUrl" -> quorumAddress))
+    // df.save("org.apache.phoenix.spark", SaveMode.Overwrite, Map("table" -> "TABLE1_COPY", "zkUrl" -> quorumAddress))
+    // df.save is removed from spark-2.0
+    // source: https://github.com/apache/spark/blob/v1.6.1/sql/core/src/main/scala/org/apache/spark/sql/DataFrame.scala#L2021
+    df.write.format("org.apache.phoenix.spark").mode(SaveMode.Overwrite)
+      .options(Map("table" -> "TABLE1_COPY", "zkUrl" -> quorumAddress)).save()
 
     // Verify results
     stmt = conn.createStatement()
