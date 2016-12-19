@@ -17,24 +17,26 @@
  */
 package org.apache.phoenix.kafka;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 public final class KafkaConstants {
 
-    public static final String BOOTSTRAP_SERVERS = "bootstrap.servers";
+    public static final String BOOTSTRAP_SERVERS = ProducerConfig.BOOTSTRAP_SERVERS_CONFIG;
     
-    public static final String KEY_SERIALIZER = "key.serializer";
+    public static final String KEY_SERIALIZER = ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG;
 
-    public static final String VALUE_SERIALIZER = "value.serializer";
+    public static final String VALUE_SERIALIZER = ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
 
     public static final String DEFAULT_KEY_SERIALIZER = StringSerializer.class.getName();
 
     public static final String DEFAULT_VALUE_SERIALIZER = StringSerializer.class.getName();
     
-    public static final String KEY_DESERIALIZER = "key.deserializer";
+    public static final String KEY_DESERIALIZER = ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
 
-    public static final String VALUE_DESERIALIZER = "value.deserializer";
+    public static final String VALUE_DESERIALIZER = ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
 
     public static final String DEFAULT_KEY_DESERIALIZER = StringDeserializer.class.getName();
 
@@ -42,7 +44,7 @@ public final class KafkaConstants {
 
     public static final String TOPICS = "topics";
 
-    public static final String GROUP_ID = "group.id";
+    public static final String GROUP_ID = ConsumerConfig.GROUP_ID_CONFIG;
     
     public static final String TIMEOUT = "poll.timeout.ms";
     
